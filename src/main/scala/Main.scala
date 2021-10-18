@@ -40,17 +40,17 @@ object Main extends App {
   val collection: MongoCollection[Document] = database.getCollection("mgPractice")    // db.mgPractice
   
   println("Welcome! You can use this program to see various info about the top artists and songs on Spotify")
-  println("To view information about Artists type 1. For information regarding Songs type 2.")
-  println("Please type your selection")
+  println("To view information about Artists type 1. For information regarding Songs type 2. To EXIT type 3.")
 
   var userResponse: Int = readInt(); 
 
   def userSelectionMain(userInput: Int) {
     if(userInput >= 4 || userInput <= 0){
-      println("To view information about Artists type 1. For information regarding Songs type 2.")
-      return
+      println("Error! Incorrect Input. To view information about Artists type 1. For information regarding Songs type 2. To EXIT type 3.")
+      var newUserResponse: Int = readInt()
+      userSelectionMain(newUserResponse)
     } else if(userInput == 1){
-        println("Artist Menu: To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT type 4")
+        println("Artist Menu: To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT type 4.")
         var newUserResponse: Int = readInt()
         userSelectionSecondaryArtists(newUserResponse)
     } else if(userInput == 2){
@@ -80,9 +80,9 @@ object Main extends App {
         getSecondResponseArtists()
     } else if(userInputTwo == 4){
         println("Exiting to Main Menu")
-        println("To view information about Artists type 1. For information regarding Songs type 2.")
+        println("To view information about Artists type 1. For information regarding Songs type 2. To EXIT type 3.")
         var newUserResponse: Int = readInt()
-        userSelectionSecondaryArtists(newUserResponse)
+        userSelectionMain(newUserResponse)
     }
   }
 
@@ -101,20 +101,20 @@ object Main extends App {
         getSecondResponseSongs()
     } else if(userInputTwo == 4){
         println("Exiting to Main Menu")
-        println("To view information about Artists type 1. For information regarding Songs type 2.")
+        println("To view information about Artists type 1. For information regarding Songs type 2. To EXIT type 3.")
         var newUserResponse: Int = readInt()
-        userSelectionSecondarySongs(newUserResponse)
+        userSelectionMain(newUserResponse)
     }
   }
 
   def getSecondResponseArtists() {
-    println("To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT type 4")
+    println("To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT to Main Menu type 4")
     var secondUserResponse: Int = readInt()
     userSelectionSecondaryArtists(secondUserResponse)
   }
 
   def getSecondResponseSongs() {
-    println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. For the top 5 Songs by Average Streams type 3. To EXIT type 4.")
+    println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. For the top 5 Songs by Average Streams type 3. To EXIT to Main Menu type 4.")
     var secondUserResponse: Int = readInt()
     userSelectionSecondarySongs(secondUserResponse)
   }
