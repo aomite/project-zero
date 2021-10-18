@@ -119,6 +119,5 @@ object Main extends App {
     userSelectionSecondarySongs(secondUserResponse)
   }
 
-  //collection.aggregate(project(fields(include("title", "author"), excludeId())).printResults()
   println("Program Closed") 
 }
