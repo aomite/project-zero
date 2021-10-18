@@ -43,38 +43,82 @@ object Main extends App {
   println("To view information about Artists type 1. For information regarding Songs type 2.")
   println("Please type your selection")
 
-  var userResponse: Int = readInt()
- 
-  userResponse match {
-    // fail safe reference: collection.aggregate(Seq(group("$Artist"))).printResults()
-    case 1 => {
-      println("To view top 5 Artist type 1. For top Artist by Total Streams type 2. For top Artist by Average Streams type 3. To EXIT type 4")
-      var secondUserResponse: Int = readInt()
+  var userResponse: Int = readInt(); 
 
-      secondUserResponse match{
-        case 1 => collection.aggregate(Seq(project(fields(include("Position", "Artist"), excludeId())), Aggregates.sort(ascending("Position")), Aggregates.limit(5))).printResults()
-        case 2 => collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")), Aggregates.limit(5))).printResults()
-        case 3 => collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.avg("averageStreams", "$Streams")), Aggregates.sort(descending("averageStreams")), Aggregates.limit(5))).printResults()
-        case 4 => println("Exiting...")
-        case _ => println("Input 1-4 not detected. To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT type 4")
-      }
+  def userSelectionMain(userInput: Int) {
+    if(userInput >= 4 || userInput <= 0){
+      println("To view information about Artists type 1. For information regarding Songs type 2.")
+      return
+    } else if(userInput == 1){
+        println("Artist Menu: To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT type 4")
+        var newUserResponse: Int = readInt()
+        userSelectionSecondaryArtists(newUserResponse)
+    } else if(userInput == 2){
+        println("Song Menu: To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. For the top 5 Songs by Average Streams type 3. To EXIT type 4.")
+        var newUserResponse: Int = readInt()
+        userSelectionSecondarySongs(newUserResponse)
+    } else if(userInput == 3){
+        println("Exiting...")
+        client.close()
     }
-    case 2 => {
-      println("To view top 5 songs type 1. For the top 5 Songs by Total Streams type 2. For the top 5 Songs by Average Streams type 3. To EXIT type 4.")
-      var secondUserResponse: Int = readInt()
-
-      secondUserResponse match {
-        case 1 => collection.aggregate(Seq(project(fields(include("Position", "Track Name"), excludeId())), Aggregates.sort(ascending("Position")), Aggregates.limit(5))).printResults()
-        case 2 => 
-        case 3 =>
-        case 4 => println("Exiting...")
-        case _ => println("Input 1-4 not detected. To view the top 5 songs type 1. For the total amount of Streams for all songs type 2. For the top 5 Songs by Average Streams type 3. To EXIT type 4.")
-      }
-    }
-      
-    case _ => println("Please type 1 (Artists Information) or 2 (Songs Information)")
   }
+
+  userSelectionMain(userResponse)
   
+  def userSelectionSecondaryArtists(userInputTwo: Int) {
+    if(userInputTwo >= 5 || userInputTwo <= 0){
+      println("Incorrect input! Input 1-4 not detected.")
+      getSecondResponseArtists()
+    } else if(userInputTwo == 1){
+        collection.aggregate(Seq(project(fields(include("Position", "Track Name"), excludeId())), Aggregates.sort(ascending("Position")), Aggregates.limit(5))).printResults()
+        getSecondResponseArtists()
+    } else if(userInputTwo == 2){
+        collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")), Aggregates.limit(5))).printResults()
+        getSecondResponseArtists()
+    } else if(userInputTwo == 3){
+        collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.avg("averageStreams", "$Streams")), Aggregates.sort(descending("averageStreams")), Aggregates.limit(5))).printResults()
+        getSecondResponseArtists()
+    } else if(userInputTwo == 4){
+        println("Exiting to Main Menu")
+        println("To view information about Artists type 1. For information regarding Songs type 2.")
+        var newUserResponse: Int = readInt()
+        userSelectionSecondaryArtists(newUserResponse)
+    }
+  }
+
+  def userSelectionSecondarySongs(userInputTwo: Int) {
+    if(userInputTwo >= 5 || userInputTwo <= 0){
+      println("Incorrect input! Input 1-4 not detected.")
+      getSecondResponseSongs()
+    } else if(userInputTwo == 1){
+        collection.aggregate(Seq(project(fields(include("Position", "Artist"), excludeId())), Aggregates.sort(ascending("Position")), Aggregates.limit(5))).printResults()
+        getSecondResponseSongs()
+    } else if(userInputTwo == 2){
+        collection.aggregate(Seq(Aggregates.group("$combinedTotalStreams", Accumulators.sum("combinedTotalStreams", "$Streams")), project(fields(excludeId())))).printResults()
+        getSecondResponseSongs()
+    } else if(userInputTwo == 3){
+        println("Coming soon")
+        getSecondResponseSongs()
+    } else if(userInputTwo == 4){
+        println("Exiting to Main Menu")
+        println("To view information about Artists type 1. For information regarding Songs type 2.")
+        var newUserResponse: Int = readInt()
+        userSelectionSecondarySongs(newUserResponse)
+    }
+  }
+
+  def getSecondResponseArtists() {
+    println("To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To EXIT type 4")
+    var secondUserResponse: Int = readInt()
+    userSelectionSecondaryArtists(secondUserResponse)
+  }
+
+  def getSecondResponseSongs() {
+    println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. For the top 5 Songs by Average Streams type 3. To EXIT type 4.")
+    var secondUserResponse: Int = readInt()
+    userSelectionSecondarySongs(secondUserResponse)
+  }
+
   //collection.aggregate(project(fields(include("title", "author"), excludeId())).printResults()
-  println("Waiting....") 
+  println("Program Closed") 
 }
