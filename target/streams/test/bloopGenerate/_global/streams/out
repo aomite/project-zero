@@ -1,0 +1,4 @@
+[debug] [project-zero-test] Classpath dependencies List()
+[debug] [project-zero-test] Dependencies from configurations List(project-zero)
+[debug] Bloop wrote the configuration of project 'project-zero-test' to 'C:\Users\amosc\Documents\Work\pzero\project-zero\.bloop\project-zero-test.json'
+[success] Generated .bloop\project-zero-test.json

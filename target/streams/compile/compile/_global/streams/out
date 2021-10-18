@@ -1,0 +1,52 @@
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Helpers.scala:8:12: object mongodb is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.mongodb.scala._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Helpers.scala:12:105: not found: type Document[0m
+[0m[[0m[31merror[0m] [0m[0m  implicit class DocumentObservable[C](val observable: Observable[Document]) extends ImplicitObservable[Document] {[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Helpers.scala:12:56: not found: type Observable[0m
+[0m[[0m[31merror[0m] [0m[0m  implicit class DocumentObservable[C](val observable: Observable[Document]) extends ImplicitObservable[Document] {[0m
+[0m[[0m[31merror[0m] [0m[0m                                                       ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Helpers.scala:13:30: not found: type Document[0m
+[0m[[0m[31merror[0m] [0m[0m    override val converter: (Document) => String = (doc) => doc.toJson[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Helpers.scala:16:55: not found: type Observable[0m
+[0m[[0m[31merror[0m] [0m[0m  implicit class GenericObservable[C](val observable: Observable[C]) extends ImplicitObservable[C] {[0m
+[0m[[0m[31merror[0m] [0m[0m                                                      ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Helpers.scala:21:21: not found: type Observable[0m
+[0m[[0m[31merror[0m] [0m[0m    val observable: Observable[C][0m
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:1:12: object mongodb is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.mongodb.scala._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:3:12: object mongodb is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.mongodb.scala.model._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:4:12: object mongodb is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.mongodb.scala.model.Aggregates._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:5:12: object mongodb is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.mongodb.scala.model.Accumulators._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:6:12: object mongodb is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.mongodb.scala.model.Sorts._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:11:12: object bson is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.bson.BsonValue[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:12:12: object bson is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.bson.codecs.pojo.annotations.BsonId[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:18:15: not found: type MongoClient[0m
+[0m[[0m[31merror[0m] [0m[0m  val client: MongoClient = MongoClient("mongodb://127.0.0.1:27017/")   // localhost: 27017[0m
+[0m[[0m[31merror[0m] [0m[0m              ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:18:29: not found: value MongoClient[0m
+[0m[[0m[31merror[0m] [0m[0m  val client: MongoClient = MongoClient("mongodb://127.0.0.1:27017/")   // localhost: 27017[0m
+[0m[[0m[31merror[0m] [0m[0m                            ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:36:17: not found: type MongoDatabase[0m
+[0m[[0m[31merror[0m] [0m[0m  val database: MongoDatabase = client.getDatabase("test")    // use test[0m
+[0m[[0m[31merror[0m] [0m[0m                ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\amosc\Documents\Work\pzero\project-zero\src\main\scala\Main.scala:39:19: not found: type MongoCollection[0m
+[0m[[0m[31merror[0m] [0m[0m  val collection: MongoCollection[Document] = database.getCollection("mgPractice")    // db.mgPractice[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m17 errors found[0m
