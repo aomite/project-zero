@@ -41,7 +41,6 @@ object Main extends App {
   
   println("Welcome! You can use this program to see various info about the top artists and songs on Spotify")
   println("To view information about Artists type 1. For information regarding Songs type 2.")
-  println("To view top Artist by Total Streams type 3. To view top Artist by total Average Streams type 4.")
   println("Please type your selection")
 
   var userResponse: Int = readInt()
