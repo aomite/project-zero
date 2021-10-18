@@ -45,15 +45,12 @@ object Main extends App {
   var userResponse: Int = readInt()
  
   userResponse match {
-    // fail safe: collection.aggregate(Seq(group("$Artist"))).printResults()
+    // fail safe reference: collection.aggregate(Seq(group("$Artist"))).printResults()
     case 1 => collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")))).printResults()
     case 2 => collection.aggregate(Seq(group("$Track Name"))).printResults()
     case _ => println("Please type 1(Artist) or 2(Songs)")
   }
   
-  // db.songInfo.aggregate([{$group: {_id: "$Artist", totalStreams:{$sum: "$Streams"}}}, {$sort: {totalStreams:-1}}])
-  collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")))).printResults()
-
   //collection.aggregate(Seq(group("$Artist"))).printResults()
   println("Waiting....") 
 }
