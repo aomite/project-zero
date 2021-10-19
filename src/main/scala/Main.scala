@@ -54,7 +54,7 @@ object Main extends App {
         var newUserResponse: Int = readInt()
         userSelectionSecondaryArtists(newUserResponse)
     } else if(userInput == 2){
-        println("Song Menu: To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. For the top 5 Artists has the most songs in the top 200 US chart type 3. To RETURN to Main Menu type type 4.")
+        println("Song Menu: To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. To search Songs in the top 200 US chart by artist type 3. To RETURN to Main Menu type type 4.")
         var newUserResponse: Int = readInt()
         userSelectionSecondarySongs(newUserResponse)
     } else if(userInput == 3){
@@ -136,7 +136,7 @@ object Main extends App {
   }
 
   def getSecondResponseSongs() {
-    println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. For the top 5 Artists has the most songs in the top 200 US chart type 3. To RETURN to Main Menu type 4.")
+    println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. To search Songs in the top 200 US chart by Artist type 3. To RETURN to Main Menu type 4.")
     var secondUserResponse: Int = readInt()
     userSelectionSecondarySongs(secondUserResponse)
   }
