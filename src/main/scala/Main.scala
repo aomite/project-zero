@@ -72,7 +72,7 @@ object Main extends App {
       println("Incorrect input! Input 1-4 not detected.")
       getSecondResponseArtists()
     } else if(userInputTwo == 1){
-        collection.aggregate(Seq(project(fields(include("Position", "Artist"), excludeId())), Aggregates.sort(ascending("Position")), Aggregates.limit(5))).printResults()
+        collection.aggregate(Seq(project(fields(include("Position", "Artist", "Streams"), excludeId())), Aggregates.sort(descending("Streams")), Aggregates.limit(5))).printResults()
         getSecondResponseArtists()
     } else if(userInputTwo == 2){
         collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")), Aggregates.limit(5))).printResults()
@@ -93,7 +93,7 @@ object Main extends App {
       println("Incorrect input! Input 1-4 not detected.")
       getSecondResponseSongs()
     } else if(userInput == 1){
-        collection.aggregate(Seq(project(fields(include("Position", "Track Name"), excludeId())), Aggregates.sort(ascending("Position")), Aggregates.limit(5))).printResults()
+        collection.aggregate(Seq(project(fields(include("Position", "Track Name", "Streams"), excludeId())), Aggregates.sort(descending("Streams")), Aggregates.limit(5))).printResults()
         getSecondResponseSongs()
     } else if(userInput == 2){
         collection.aggregate(Seq(Aggregates.group("$combinedTotalStreams", Accumulators.sum("combinedTotalStreams", "$Streams")), project(fields(excludeId())))).printResults()
@@ -139,6 +139,12 @@ object Main extends App {
     println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. To search Songs in the top 200 US chart by Artist type 3. To RETURN to Main Menu type 4.")
     var secondUserResponse: Int = readInt()
     userSelectionSecondarySongs(secondUserResponse)
+  }
+
+  def getSecondResponseModification() {
+    println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
+    var newUserResponse: Int = readInt()
+    userSelectionSecondaryModification(newUserResponse)
   }
   
   
@@ -186,9 +192,7 @@ object Main extends App {
 
     if(artistOrSong >= 4 || artistOrSong <= 0){
         println("Incorrect Input. Exiting to Modification Menu...")
-        println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionSecondaryModification(newUserResponse)
+        getSecondResponseModification()
     } else if(artistOrSong == 1){
         println("What is the Artist's new name?")
         var newArtist: String = readLine()
@@ -196,9 +200,7 @@ object Main extends App {
         collection.aggregate(Seq(filter(equal("Artist", s"$newArtist")))).printResults()
         println("Artist update complete. Exiting to Modification Menu...")
 
-        println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionSecondaryModification(newUserResponse)
+        getSecondResponseModification()
     } else if(artistOrSong == 2){ 
         println("What is the new Song's title?")
         var newSong: String = readLine()
@@ -206,14 +208,10 @@ object Main extends App {
         collection.aggregate(Seq(filter(equal("Track Name", s"$newSong")))).printResults()
         println("Song update complete. Exiting to Modification Menu...")
 
-        println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionSecondaryModification(newUserResponse)
+        getSecondResponseModification()
     } else if(artistOrSong == 3){
         println("Exiting to Modification Menu...")
-        println("")
-        var secondUserResponse: Int = readInt()
-        userSelectionSecondaryModification(secondUserResponse)
+        getSecondResponseModification()
     }
   }
 
