@@ -1,5 +1,14 @@
+//Helper
+import example.Helpers._
+
+//Scala
 import org.mongodb.scala._
 import scala.concurrent._
+import io.StdIn._
+import scala.io.Source
+import scala.collection.SeqMap
+
+//MongoDB Scala Driver
 import org.mongodb.scala.model._
 import org.mongodb.scala.model.Aggregates._
 import org.mongodb.scala.model.Accumulators._
@@ -7,26 +16,20 @@ import org.mongodb.scala.model.Sorts._
 import org.mongodb.scala.model.Projections._
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
-import io.StdIn._
-import scala.io.Source  
-
-import example.Helpers._
+import org.mongodb.scala.model.UpdateOptions
+import org.mongodb.scala.bson.BsonObjectId
 import org.bson.BsonValue
 import org.bson.codecs.pojo.annotations.BsonId
-import scala.collection.SeqMap
-
- import org.mongodb.scala.model.UpdateOptions
- import org.mongodb.scala.bson.BsonObjectId
 
 object Main extends App {
   
-  // Connect to server
+  // Connect to Mongo server
   val client: MongoClient = MongoClient("mongodb://127.0.0.1:27017/")   // localhost: 27017
 
   // Reads CSV file and inserts it into a MongoDB database
   val cl: Runtime = Runtime.getRuntime(); 
   var runCommand: Process = null; 
-  val command: String = "mongoimport --db test --collection mgPractice --type csv --headerline --drop C:/Users/amosc/Documents/Work/mgDemo/regional-us-daily-latest.csv"
+  val command: String = "mongoimport --db test --collection proj-zero --type csv --headerline --drop C:/Users/amosc/Documents/Work/mgDemo/regional-us-daily-latest.csv"
   
   try {
     runCommand = cl.exec(command)
@@ -38,113 +41,180 @@ object Main extends App {
     } 
   }
 
-  // Get an object to the DB
-  val database: MongoDatabase = client.getDatabase("test")    // use test
+  val database: MongoDatabase = client.getDatabase("test")  
 
-  // Get a Collection
-  val collection: MongoCollection[Document] = database.getCollection("mgPractice")    // db.mgPractice
-  
-  def userSelectionMain(userInput: Int) {
-    if(userInput >= 5 || userInput <= 0){
-      println("Error! Incorrect Input. To view information about Artists type 1. For information regarding Songs type 2. To add, update, or delete information type 3. To EXIT PROGRAM type 4.")
-      var newUserResponse: Int = readInt()
-      userSelectionMain(newUserResponse)
-    } else if(userInput == 1){
-        println("Artist Menu: To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To RETURN to Main Menu type 4.")
+  val collection: MongoCollection[Document] = database.getCollection("proj-zero") 
+
+  //Menu Interface  
+  def mainMenu(userInput: Int) {
+    try {
+      if(userInput >= 5 || userInput <= 0){
+        println("Incorrect Input. Please select a number between 1 and 4")
+        println("[1] Information about Artists")
+        println("[2] Information about Songs")
+        println("[3] Add, update, or delete information")
+        println("[4] EXIT program")
         var newUserResponse: Int = readInt()
-        userSelectionSecondaryArtists(newUserResponse)
-    } else if(userInput == 2){
-        println("Song Menu: To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. To search Songs in the top 200 US chart by artist type 3. To RETURN to Main Menu type type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionSecondarySongs(newUserResponse)
-    } else if(userInput == 3){
-        println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionSecondaryModification(newUserResponse)
-    } else if(userInput == 4){
-        println("Exiting...")
-        client.close()
+        mainMenu(newUserResponse)
+      } else if(userInput == 1){
+          println("Artist Menu:")
+          println("[1] Top 5 Artists by charting")
+          println("[2] Top 5 Artists by total streams")
+          println("[3] Top 5 Artists by average streams")
+          println("[4] Main Menu")
+          var newUserResponse: Int = readInt()
+          artistMenu(newUserResponse)
+      } else if(userInput == 2){
+          println("Song Menu:")
+          println("[1] Top 5 Songs by charting")
+          println("[2] Total streams across all songs")
+          println("[3] Song search")
+          println("[4] Main Menu")
+          var newUserResponse: Int = readInt()
+          songMenu(newUserResponse)
+      } else if(userInput == 3){
+          println("Modification Menu:")
+          println("[1] Add new document")
+          println("[2] Update document")
+          println("[3] Delete document")
+          println("[4] Main Menu")
+          var newUserResponse: Int = readInt()
+          modificationMenu(newUserResponse)
+      } else if(userInput == 4){
+          println("Exiting program. Have a great day! :)")
+          client.close()
+      }
+    } catch {
+        case e: Exception => {
+          println("Incorrect Input. Please select a number between 1 and 4")
+          println("[1] Information about Artists")
+          println("[2] Information about Songs")
+          println("[3] Add, update, or delete information")
+          println("[4] EXIT program")
+          var newUserResponse: Int = readInt()
+          mainMenu(newUserResponse)
+        }
     }
   }
   
-  def userSelectionSecondaryArtists(userInputTwo: Int) {
-    if(userInputTwo >= 5 || userInputTwo <= 0){
-      println("Incorrect input! Input 1-4 not detected.")
-      getSecondResponseArtists()
-    } else if(userInputTwo == 1){
-        collection.aggregate(Seq(project(fields(include("Position", "Artist", "Streams"), excludeId())), Aggregates.sort(descending("Streams")), Aggregates.limit(5))).printResults()
+  def artistMenu(userInputTwo: Int) {
+    try {
+      if(userInputTwo >= 5 || userInputTwo <= 0){
+        println("Incorrect input! Input 1-4 not detected.")
         getSecondResponseArtists()
-    } else if(userInputTwo == 2){
-        collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")), Aggregates.limit(5))).printResults()
-        getSecondResponseArtists()
-    } else if(userInputTwo == 3){
-        collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.avg("averageStreams", "$Streams")), Aggregates.sort(descending("averageStreams")), Aggregates.limit(5))).printResults()
-        getSecondResponseArtists()
-    } else if(userInputTwo == 4){
-        println("Exiting to Main Menu")
-        println("To view information about Artists type 1. For information regarding Songs type 2. To add, update, or delete information type 3. To EXIT PROGRAM type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionMain(newUserResponse)
+      } else if(userInputTwo == 1){
+          collection.aggregate(Seq(project(fields(include("Position", "Artist", "Streams"), excludeId())), Aggregates.sort(descending("Streams")), Aggregates.limit(5))).printResults()
+          getSecondResponseArtists()
+      } else if(userInputTwo == 2){
+          collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.sum("totalStreams", "$Streams")), Aggregates.sort(descending("totalStreams")), Aggregates.limit(5))).printResults()
+          getSecondResponseArtists()
+      } else if(userInputTwo == 3){
+          collection.aggregate(Seq(Aggregates.group("$Artist", Accumulators.avg("averageStreams", "$Streams")), Aggregates.sort(descending("averageStreams")), Aggregates.limit(5))).printResults()
+          getSecondResponseArtists()
+      } else if(userInputTwo == 4){
+          println("Returning to Main Menu...")
+          println("[1] Information about Artists")
+          println("[2] Information about Songs")
+          println("[3] Add, update, or delete information")
+          println("[4] EXIT program")
+          var newUserResponse: Int = readInt()
+          mainMenu(newUserResponse)
+      }
+    } catch {
+        case e: Exception => {
+
+      }
+  }
+  }
+
+  def songMenu(userInput: Int) {
+    try{
+      if(userInput >= 5 || userInput <= 0){
+        println("Incorrect input! Input 1-4 not detected.")
+        getSecondResponseSongs()
+      } else if(userInput == 1){
+          collection.aggregate(Seq(project(fields(include("Position", "Track Name", "Streams"), excludeId())), Aggregates.sort(descending("Streams")), Aggregates.limit(5))).printResults()
+          getSecondResponseSongs()
+      } else if(userInput == 2){
+          collection.aggregate(Seq(Aggregates.group("$combinedTotalStreams", Accumulators.sum("combinedTotalStreams", "$Streams")), project(fields(excludeId())))).printResults()
+          getSecondResponseSongs()
+      } else if(userInput == 3){
+          println("What Artist songs would you like to see?")
+          var newUserResponse: String = readLine()
+          collection.aggregate(Seq(project(fields(excludeId())), filter(equal("Artist", s"$newUserResponse")), Aggregates.sort(ascending("Position")))).printResults()
+          getSecondResponseSongs()
+      } else if(userInput == 4){
+          println("Exiting to Main Menu")
+          println("[1] Information about Artists")
+          println("[2] Information about Songs")
+          println("[3] Add, update, or delete information")
+          println("[4] EXIT program")
+          var newUserResponse: Int = readInt()
+          mainMenu(newUserResponse)
+      }
+    } catch {
+      case e: Exception => {
+
+      }
     }
   }
 
-  def userSelectionSecondarySongs(userInput: Int) {
-    if(userInput >= 5 || userInput <= 0){
-      println("Incorrect input! Input 1-4 not detected.")
-      getSecondResponseSongs()
-    } else if(userInput == 1){
-        collection.aggregate(Seq(project(fields(include("Position", "Track Name", "Streams"), excludeId())), Aggregates.sort(descending("Streams")), Aggregates.limit(5))).printResults()
-        getSecondResponseSongs()
-    } else if(userInput == 2){
-        collection.aggregate(Seq(Aggregates.group("$combinedTotalStreams", Accumulators.sum("combinedTotalStreams", "$Streams")), project(fields(excludeId())))).printResults()
-        getSecondResponseSongs()
-    } else if(userInput == 3){
-        println("What Artist songs would you like to see?")
-        var newUserResponse: String = readLine()
-        collection.aggregate(Seq(project(fields(excludeId())), filter(equal("Artist", s"$newUserResponse")), Aggregates.sort(ascending("Position")))).printResults()
-        getSecondResponseSongs()
-    } else if(userInput == 4){
-        println("Exiting to Main Menu")
-        println("To view information about Artists type 1. For information regarding Songs type 2. To add, update, or delete information type 3. To EXIT PROGRAM type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionMain(newUserResponse)
-    }
-  }
-
-  def userSelectionSecondaryModification(userInput: Int){
-    if(userInput >=5 || userInput <= 0){
-      println("Incorrect input! Input 1-4 not detected.")
-    } else if(userInput == 1){
-        addUserDocInfo()
-    } else if(userInput == 2){
-        updateUserDocInfo()
-    } else if(userInput == 3){
-        deleteUserDocInfo()
-    } else if(userInput == 4){
-        println("Exiting to Main Menu")
-        println("To view information about Artists type 1. For information regarding Songs type 2. To add, update, or delete information type 3. To EXIT PROGRAM type 4.")
-        var newUserResponse: Int = readInt()
-        userSelectionMain(newUserResponse)
+  def modificationMenu(userInput: Int){
+    try {
+      if(userInput >=5 || userInput <= 0){
+        println("Incorrect input! Input 1-4 not detected.")
+      } else if(userInput == 1){
+          addUserDocInfo()
+      } else if(userInput == 2){
+          updateUserDocInfo()
+      } else if(userInput == 3){
+          deleteUserDocInfo()
+      } else if(userInput == 4){
+          println("Exiting to Main Menu")
+          println("[1] Information about Artists")
+          println("[2] Information about Songs")
+          println("[3] Add, update, or delete information")
+          println("[4] EXIT program")          
+          var newUserResponse: Int = readInt()
+          mainMenu(newUserResponse)
+      }
+    } catch {
+      case e: Exception => {
+        println("An error occurred. Please try again.")
+        getSecondResponseModification()
+      }
     }
   }
 
   // Methods for userSelectionSecondary- Artists && Songs
   def getSecondResponseArtists() {
-    println("To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To RETURN to Main Menu type 4")
+    println("Artist Menu:")
+    println("[1] Top 5 Artists by charting")
+    println("[2] Top 5 Artists by total streams")
+    println("[3] Top 5 Artists by average streams")
+    println("[4] Main Menu")    
     var secondUserResponse: Int = readInt()
-    userSelectionSecondaryArtists(secondUserResponse)
+    artistMenu(secondUserResponse)
   }
 
   def getSecondResponseSongs() {
-    println("To view the top 5 songs type 1. For the total amount of Streams across all songs type 2. To search Songs in the top 200 US chart by Artist type 3. To RETURN to Main Menu type 4.")
+    println("Song Menu:")
+    println("[1] Top 5 Songs by charting")
+    println("[2] Total streams across all songs")
+    println("[3] Song search")
+    println("[4] Main Menu")    
     var secondUserResponse: Int = readInt()
-    userSelectionSecondarySongs(secondUserResponse)
+    songMenu(secondUserResponse)
   }
 
   def getSecondResponseModification() {
-    println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
+    println("Modification Menu:")
+    println("[1] Add new document")
+    println("[2] Update document")
+    println("[3] Delete document")
+    println("[4] Main Menu")    
     var newUserResponse: Int = readInt()
-    userSelectionSecondaryModification(newUserResponse)
+    modificationMenu(newUserResponse)
   }
   
   
@@ -174,9 +244,13 @@ object Main extends App {
 
     println("Exiting to Modification Menu...")
 
-    println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
+    println("Modification Menu:")
+    println("[1] Add new document")
+    println("[2] Update document")
+    println("[3] Delete document")
+    println("[4] Main Menu")    
     var newUserResponse: Int = readInt()
-    userSelectionSecondaryModification(newUserResponse)
+    modificationMenu(newUserResponse)
   }
 
   //Update
@@ -187,7 +261,10 @@ object Main extends App {
     println("What is the name of the Song on the document you wish to update?")
     var songTitle: String = readLine()
     
-    println("Document found. Which property would you like to update: Artist Name (Type 1) or Song Title (Type 2)? To CANCEL type 3.")
+    println("Document found. Which property would you like to update:")
+    println("[1] Artist Name")
+    println("[2] Song Title")
+    println("[3] CANCEL")
     var artistOrSong = readInt()
 
     if(artistOrSong >= 4 || artistOrSong <= 0){
@@ -224,18 +301,24 @@ object Main extends App {
     println("Document deleted. Exiting to Modification Menu")
     collection.aggregate(Seq(filter(equal("Artist", s"$artistName")))).printResults()
 
-    println("Modification Menu: To add a new document type 1. To update a document type 2. To delete a document type 3. To RETURN to Main Menu type 4.")
+    println("Modification Menu:")
+    println("[1] Add new document")
+    println("[2] Update document")
+    println("[3] Delete document")
+    println("[4] Main Menu")
     var newUserResponse: Int = readInt()
-    userSelectionSecondaryModification(newUserResponse)
+    modificationMenu(newUserResponse)
   }
 
 
 
-  //Call to Start Main Menu
+  //UX Start: Main Menu
   println("Welcome! This program uses information from Spotify's top 200 US chart.")
-  println("To view information about Artists type 1. For information regarding Songs type 2. To add, update, or delete information type 3. To EXIT PROGRAM type 4.")
+  println("[1] Information about Artists")
+  println("[2] Information about Songs")
+  println("[3] Add, update, or delete information")
+  println("[4] EXIT program")
   var userResponse: Int = readInt(); 
-  userSelectionMain(userResponse)
-
-  println("Program Closed")
+  mainMenu(userResponse)
+  println("Successfully closed")
 }
