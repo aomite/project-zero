@@ -20,10 +20,8 @@ import scala.collection.SeqMap
 
 object Main extends App {
   
-  // Connect to server
   val client: MongoClient = MongoClient("mongodb://127.0.0.1:27017/")   // localhost: 27017
 
-  // Reads CSV file and inserts it into a MongoDB database
   val cl: Runtime = Runtime.getRuntime(); 
   var runCommand: Process = null; 
   val command: String = "mongoimport --db test --collection mgPractice --type csv --headerline --drop C:/Users/amosc/Documents/Work/mgDemo/regional-us-daily-latest.csv"
@@ -38,10 +36,8 @@ object Main extends App {
     } 
   }
 
-  // Get an object to the DB
   val database: MongoDatabase = client.getDatabase("test")    // use test
 
-  // Get a Collection
   val collection: MongoCollection[Document] = database.getCollection("mgPractice")    // db.mgPractice
   
   def userSelectionMain(userInput: Int) {
@@ -128,7 +124,6 @@ object Main extends App {
     }
   }
 
-  // Methods for userSelectionSecondary- Artists && Songs
   def getSecondResponseArtists() {
     println("To view the top 5 Artist type 1. For the top 5 Artist by Total Streams type 2. For the top 5 Artist by Average Streams type 3. To RETURN to Main Menu type 4")
     var secondUserResponse: Int = readInt()
@@ -148,7 +143,6 @@ object Main extends App {
   }
   
   
-  //Add
   def addUserDocInfo(){
     println("Creating new document...")
     println("Please enter the song title...")
@@ -179,7 +173,6 @@ object Main extends App {
     userSelectionSecondaryModification(newUserResponse)
   }
 
-  //Update
   def updateUserDocInfo(){
     println("What is the name of the Artist on the document you wish to update?")
     var artistName: String = readLine()
@@ -215,7 +208,6 @@ object Main extends App {
     }
   }
 
-  //Delete
   def deleteUserDocInfo(){
     println("What is the name of the Artist on the document you wish to delete?")
     var artistName: String = readLine()
@@ -229,9 +221,6 @@ object Main extends App {
     userSelectionSecondaryModification(newUserResponse)
   }
 
-
-
-  //Call to Start Main Menu
   println("Welcome! This program uses information from Spotify's top 200 US chart.")
   println("To view information about Artists type 1. For information regarding Songs type 2. To add, update, or delete information type 3. To EXIT PROGRAM type 4.")
   var userResponse: Int = readInt(); 
