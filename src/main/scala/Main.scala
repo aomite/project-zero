@@ -24,7 +24,7 @@ object Main extends App {
 
   val cl: Runtime = Runtime.getRuntime(); 
   var runCommand: Process = null; 
-  val command: String = "mongoimport --db test --collection mgPractice --type csv --headerline --drop C:/Users/amosc/Documents/Work/mgDemo/regional-us-daily-latest.csv"
+  val command: String = "mongoimport --db test --collection mgPractice --type csv --headerline --drop <csv file path required>"
   
   try {
     runCommand = cl.exec(command)
@@ -36,9 +36,9 @@ object Main extends App {
     } 
   }
 
-  val database: MongoDatabase = client.getDatabase("test")    // use test
+  val database: MongoDatabase = client.getDatabase(<dbName>)   
 
-  val collection: MongoCollection[Document] = database.getCollection("mgPractice")    // db.mgPractice
+  val collection: MongoCollection[Document] = database.getCollection(<collectionName>)   
   
   def userSelectionMain(userInput: Int) {
     if(userInput >= 5 || userInput <= 0){
