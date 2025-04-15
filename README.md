@@ -2,8 +2,8 @@
 A simple Scala-based application queries data on Spotify's charting artists and returns results via user-chosen queries.
 
 ## Features
-Seemlessly processes data from a CSV file into a local MongoDB database
-Full data manipulation:
+  * Seemlessly processes data from a CSV file into a local MongoDB database
+  * Full data manipulation:
   * Add new artists/songs
   * Edit & Update artists/songs
   * Delete artists/songs
